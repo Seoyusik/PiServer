@@ -8,8 +8,8 @@ var dbconfig = require('../config/dbconfig.js');
 var review = {};
 review.mntreview=function(req,res){
   //connection database
-  var sql1='SELECT * FROM HelloMountain.review WHERE reviewMNtID = ? ORDER BY reviewID desc';
-  var sql1s=mysql.format(sql1,req.body.mntID);
+  var sql1='SELECT review.* , count(likelist.reviewID) as ? FROM HelloMountain.review LEFT JOIN HelloMountain.likelist ON review.reviewMntID = ? AND review.reviewID = likelist.reviewID WHERE reviewMntID = ? GROUP BY review.reviewID ORDER BY review.reviewID desc';
+  var sql1s=mysql.format(sql1,['LIKE',req.body.mntID,req.body.mntID]);
 
   var connection=mysql.createConnection(dbconfig);
 
@@ -67,8 +67,8 @@ review.mntreview=function(req,res){
 
 review.userreview=function(req,res){
   //connection database
-  var sql1='SELECT * FROM HelloMountain.review WHERE reviewUserID = ? ORDER BY reviewID desc';
-  var sql1s=mysql.format(sql1,req.body.id);
+  var sql1='SELECT review.* , count(likelist.reviewID) as ? FROM HelloMountain.review LEFT JOIN HelloMountain.likelist ON review.reviewUserID = ? AND review.reviewID = likelist.reviewID WHERE reviewUserID = ? GROUP BY review.reviewID ORDER BY review.reviewID desc'
+  var sql1s=mysql.format(sql1,['LIKE',req.body.id,req.body.id]);
 
   var connection=mysql.createConnection(dbconfig);
 
@@ -445,9 +445,9 @@ review.likemarkcount=function(req,res){
 
   connection.connect(function(err){
     if(!err) {
-        console.log("Database is connected ... STAR REFRESH");
+        console.log("Database is connected ... COUNT LIKEMARK");
     } else {
-        console.log("Error connecting database ... STAR REFRESH");
+        console.log("Error connecting database ... COUNT LIKEMARK");
       }
   });
 
