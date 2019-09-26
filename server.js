@@ -91,19 +91,14 @@ app.use('/api', router);
 /*********file upload***************/
 //review img
 app.post('/reviewimageup', reviewimageupload.single('img'), (req, res) => {
+//  console.log(req);
+
   console.log(req.file.filename);
   console.log(req.body.reviewID);
 
   var reviewid=req.body.reviewID;
   var pic=req.file.filename;
   var image='./reviewimages/'.concat(pic);
-
-  gm(image)
-  .resize(800,600)
-  .write(image, function (err) {
-    if (err) console.error(err)
-    else console.log('resize done')
-  });
 
   var connection=mysql.createConnection(dbconfig);
 
@@ -129,6 +124,14 @@ app.post('/reviewimageup', reviewimageupload.single('img'), (req, res) => {
   });
 
   connection.end();
+
+    gm(image)
+    .resize(800,600)
+    .write(image, function (err) {
+      if (err) console.error(err)
+      else console.log('resize done')
+    });
+
 });
 
 //user img
@@ -139,6 +142,7 @@ app.post('/userimageup', userimageupload.single('img'), (req, res) => {
   var id = req.body.id;
   var pic= req.file.filename;
 
+  var image='./userimages/'.concat(pic);
   var connection=mysql.createConnection(dbconfig);
 
   connection.connect(function(err){
@@ -163,6 +167,13 @@ app.post('/userimageup', userimageupload.single('img'), (req, res) => {
   });
 
   connection.end();
+
+  gm(image)
+  .resize(800,600)
+  .write(image, function (err) {
+    if (err) console.error(err)
+    else console.log('resize done')
+  });
 });
 
 /*********file upload***************/
